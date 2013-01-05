@@ -1,0 +1,167 @@
+
+
+<!DOCTYPE html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+<link href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
+        <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+        <script src="http://ricostacruz.com/jquery.transit/jquery.transit.js"></script>
+        
+<script>
+$(document).ready(function(){
+$('.bubble').draggable();
+$('.bubble_textarea').hide();
+var canvas = $('.speech_canvas').get(0);
+var ctx = canvas.getContext('2d'); 
+drawBubble(ctx, 10,60,220, 90, 20);
+ 
+$('.bubble').dblclick(function(e) {
+var label = $(this).find('.bubble_label');
+var textarea = $(this).find('.bubble_textarea');
+textarea.text(label.val());
+label.hide();
+textarea.show();
+textarea.focus();
+});
+ 
+$('.bubbletext').focusout(function() {
+var label = $(this).find('.bubble_label');
+var textarea = $(this).find('.bubble_textarea');
+label.html(textarea.val());
+ 
+textarea.hide();
+label.show();
+});
+$('.bubble').dblclick(function(){
+$(this).css({'border': 'solid 2px'})
+});
+ 
+ 	 $('.bubble').focusout(function(){
+		$(this).css({'border': '0'})
+		});
+ 
+$('.rotate').mousehold(function(e) {
+var x = e.pageX;
+    var y = e.pageY;
+    var myAngle = diff(x, y, $('.bubble'));
+    var rotationValue = 'rotate(' + myAngle + 'deg)';
+    $('.bubble').css({
+        '-moz-transform': rotationValue,
+        '-webkit-transform': rotationValue,
+        '-o-transform': rotationValue,
+        '-ms-transform': rotationValue,
+        'transform': rotationValue
+    });
+});
+
+ 
+});
+function diff(x, y, centerItem) {
+        centerLoc = centerItem.offset();
+    var dx = x - (centerLoc.left + (centerItem.width() / 2));
+        dy = y - (centerLoc.top + (centerItem.height() / 2));
+    return Math.atan2(dy, dx) * (180 / Math.PI);
+}
+
+function drawBubble(ctx, x, y, w, h, radius)
+{
+  var r = x + w;
+  var b = y + h;
+  ctx.beginPath();
+  ctx.strokeStyle="black";
+  ctx.lineWidth="2";
+  ctx.moveTo(x+radius, y);
+  ctx.lineTo(x+radius/2, y-10);
+  ctx.lineTo(x+radius * 2, y);
+  ctx.lineTo(r-radius, y);
+  ctx.quadraticCurveTo(r, y, r, y+radius);
+  ctx.lineTo(r, y+h-radius);
+  ctx.quadraticCurveTo(r, b, r-radius, b);
+  ctx.lineTo(x+radius, b);
+  ctx.quadraticCurveTo(x, b, x, b-radius);
+  ctx.lineTo(x, y+radius);
+  ctx.quadraticCurveTo(x, y, x+radius, y);
+  ctx.stroke();
+}
+</script>
+<style>
+.bubble
+{
+  position:relative;
+  height: 200px;
+  width: 250px;
+ 
+}
+.bubbleborder
+{
+  position:absolute;
+  top:0;
+  left:0;
+}
+.bubbletext
+{
+  position:absolute;
+  top:0;
+  left:0;
+  width:200px;
+  height:170px;
+  padding:80px 16px 16px 16px;
+  text-align:center
+}
+.ui-resizable { position: relative;}
+.ui-resizable-handle { position: absolute;font-size: 0.1px;z-index: 99999; display: block; }
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none; }
+.ui-resizable-n { cursor: n-resize; height: 7px; width: 100%; top: -5px; left: 0; }
+.ui-resizable-s { cursor: s-resize; height: 7px; width: 100%; bottom: -5px; left: 0; }
+.ui-resizable-e { cursor: e-resize; width: 7px; right: -5px; top: 0; height: 100%; }
+.ui-resizable-w { cursor: w-resize; width: 7px; left: -5px; top: 0; height: 100%; }
+.ui-resizable-se { cursor: se-resize; width: 9px; height: 9px; right: -5px; bottom: -5px; }
+.ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
+.ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
+.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+.ui-wrapper {
+overflow:   visible !important;}
+.ui-resizable-handle {
+background:    #f5dc58;
+border:        1px solid #FFF;
+z-index:    2;}
+.ui-rotatable-handle {
+background:    #f5dc58;
+border:        1px solid #FFF;
+border-radius: 5px;
+-moz-border-radius:    5px;
+-o-border-radius:      5px;
+-webkit-border-radius: 5px;
+cursor:        pointer;
+height:        10px;
+left:          50%;
+margin:        0 0 0 -5px;
+position:      absolute;
+top:           -5px;
+width:         10px;}
+.ui-rotatable-handle.clone {
+visibility:  hidden;}
+</style>
+
+<div id="bubble_container" style="background-image: url(/media/{{upload_image_obj.image}}); height:900px;width:1000px ">
+	
+	<div class="bubble ui-widget-content">
+		<div class="rotate" style="height:100px;width: 100px">
+<!-- 			<img style="height:50px;width: 50px; float: right;" src="http://cdn4.iconfinder.com/data/icons/Primo_Icons/PNG/128x128/sub_black_rotate_cw.png"/> -->
+		</div>
+		</font>
+		<canvas class="speech_canvas bubbleborder" width="240" height="200" >
+		</canvas>
+		<div class="bubbletext">
+			<textarea class="bubble_textarea"></textarea>
+			<label class="bubble_label">Double click me to edit my bubble</label>
+		</div>
+	</div>
+    
+</div>
+    </body>
+</html>
